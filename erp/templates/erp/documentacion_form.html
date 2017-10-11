@@ -1,0 +1,69 @@
+
+{% extends "base_generic.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Completar Documentación de Cotización {% endblock %}
+{% block content %}
+
+
+<!-- https://bash-shell.net/phoenix-django-devs-inline-formset-nested-changesets-part-1/ -->
+
+
+
+
+<div class="wrapper-md">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold">Documentación de la Cotización #{{ cotizacion.pk }} ({{ cotizacion.local }} - {{ cotizacion.local.cliente }})
+				{% if cotizacion.estado_cotizacion == 1 %} <label class="label label-info m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+                {% elif cotizacion.estado_cotizacion == 2 %}<label class="label label-warning m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+                {% elif cotizacion.estado_cotizacion == 3 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label>
+                {% else %}<label class="label label-primary m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+                {% endif %}
+			</div>
+			<div class="panel-body">
+				<form method='POST' action="">
+					{% csrf_token %}
+					<div>
+						{{ formset.management_form|crispy }}
+						{% for form in formset %}
+						<div class="form-inline">  
+							{{ form|crispy }}<hr>
+						</div>
+						{% endfor %}
+					</div>
+
+					<button class="btn btn-block btn-primary" >Guardar</button>
+				</form>
+					
+					
+
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+
+	{% block scrypts %}
+
+
+
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> Eliminado porque impedia el desempeño de dateepicker  -->
+	
+	
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker12').datepicker({
+				format: "dd/mm/yyyy",
+				weekStart: 1,
+				todayBtn: "linked",
+				language: "es",
+				calendarWeeks: true,
+				autoclose: true,
+				todayHighlight: true
+			});
+		});
+		
+	</script>
+
+	{% endblock scrypts %}

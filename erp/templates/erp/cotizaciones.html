@@ -1,0 +1,133 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Listado de Cotizaciones{% endblock %}
+
+{% block styles %}
+
+<link rel="stylesheet" href="{% static 'libs/jquery/datatables/media/js/datatables.css' %}" type="text/css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap.min.css"></link>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"></link>
+
+
+
+{% endblock styles %}
+
+
+
+{% block content %}
+
+<div class="wrapper-md">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Listado de Cotizaciones {% if factura %} de <b>Factura #{{factura.numero}}</b> {% endif %}
+    </div>
+    <div >
+      <table id="cotizaciones" class="table table-condensed table-hover b-t b-b" >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Local</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Trabajos</th>
+            <th>Neto</th>
+            <th>IVA</th>
+            <th>Total</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cotizacion in cotizacion_list %} 
+            <tr>
+              <td><a href="{% url 'erp:cotizacion_trabajos' cotizacion.pk %}" class="text-info" style="text-decoration: underline;">{{cotizacion.pk}}</a></td>
+              <td>{{cotizacion.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{cotizacion.local}}</td>
+              <td>{{cotizacion.local.cliente}}</td>
+              <td> 
+                {% if cotizacion.estado_cotizacion == 1 %} <label class="label label-info m-l-xs"><a href="#" style="cursor:pointer;">{{cotizacion.get_estado_cotizacion_display}}</a></label> 
+                {% elif cotizacion.estado_cotizacion == 2 %}<label class="label label-warning m-l-xs"><a href="{% url 'erp:cotizacion_new_documents' cotizacion.pk %}">{{cotizacion.get_estado_cotizacion_display}}</a></label> 
+                {% elif cotizacion.estado_cotizacion == 3 %}<label class="label label-danger m-l-xs"><a href="#" style="cursor:pointer;">{{cotizacion.get_estado_cotizacion_display}}</a></label>
+                {% else %}<label class="label label-primary m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+                {% endif %}
+              </td>
+              <td>
+                {% if cotizacion.estado_trabajo == 1 %} <label class="label label-warning m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+                {% elif cotizacion.estado_trabajo == 2 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+                {% else %}<label class="label label-success m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+                {% endif %}
+              </td>
+
+              
+
+
+              <td>${{cotizacion.neto|floatformat:"0"|intcomma }}</td>
+              <td>${{cotizacion.iva|floatformat:"0"|intcomma }}</td>
+              <td>${{cotizacion.total|floatformat:"0"|intcomma }}</td>
+              <td class="text-center">
+                <a href="{% url 'erp:cotizacion_edit' cotizacion.pk %}"><i class="fa fa-pencil icon text-inverse"></i></a>
+                <a href="{% url 'erp:cotizacion_detail' pk=cotizacion.pk %}"><i class="fa fa-search icon text-primary"></i></a>
+                <a href="{% url 'erp:cotizacion_detail' pk=cotizacion.pk %}"><i class="fa fa-file-pdf-o icon text-inverse"></i></a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% block scrypts %}
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript" src="{% static 'libs/jquery/datatables/media/js/datatables.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#cotizaciones').DataTable( {
+    
+        "language": {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+    } );
+} );
+</script>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% endblock %}

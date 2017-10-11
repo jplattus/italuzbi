@@ -1,0 +1,9 @@
+<h1>{{ cliente.nombre_cliente }}</h1>
+
+<ul>
+{% for factura in cliente.factura_set.all %}
+    <li>Factura Nº {{ factura.numero_factura }} -- {{ factura.estado }} </li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'erp:detail' cliente.id %}">Pagar mas facturas?</a>

@@ -1,0 +1,126 @@
+{% extends "base_generic.html" %}
+{% load humanize %}
+{% block title %}Detalle de la Cotización{% endblock %}
+{% block content %}
+
+
+	    
+<div class="wrapper-md">
+  <div>
+    <div class="row">
+      <div class="col-xs-12">
+      	<h1 class="m-n font-thin h3 text-center">Cotización #{{ object.id }}</h1>
+        
+      </div>
+      <div class="col-xs-6 text-right">
+            
+      </div>
+    </div>
+    <div class="well m-t bg-light lt">
+      <div class="row">
+        <div class="col-xs-6">
+          <strong>Mandante: {{ object.local.cliente.nombre }}</strong>
+          <p>
+            Atención: Servicios Italuz <br>
+            Local: {{ object.local }}<br>
+            Obra: Mantenciones <br>
+            
+          </p>
+        </div>
+        <div class="col-xs-6" style="text-align: right;">
+          <strong>SERVICIOS ITALUZ LTDA. | Obras Civiles Menores</strong>
+          <p>
+            Rut: 76.174.518-2<br>
+            Dirección: Paseo Ahumada 11 Of. 309<br>
+            Santiago, Chile<br>
+            Teléfonos: +56 9 88190591<br>
+            Correo: servicios.italuz@gmail.com<br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <p class="m-t m-b">Fecha Cotización: <strong>{{ object.fecha }}</strong><br>
+        Estado Cotizacion: 
+          {% if cotizacion.estado_cotizacion == 1 %} <label class="label label-info m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+          {% elif cotizacion.estado_cotizacion == 2 %}<label class="label label-warning m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+          {% elif cotizacion.estado_cotizacion == 3 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label>
+          {% else %}<label class="label label-primary m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
+          {% endif %}
+          {% if cotizacion.debe %}
+          <ul>
+                    {% for documento in cotizacion.documentacion_set.all %}
+                      <li>{{ documento.documento }} #{{documento.numero}} - {{documento.fecha|date:"SHORT_DATE_FORMAT"}} </li>
+                    {% empty %}
+                      no tiene documentos asociados
+                    {% endfor %}
+          </ul>
+          {% endif %}
+        <br>
+        Estado Trabajo:  
+          {% if cotizacion.estado_trabajo == 1 %} <label class="label label-warning m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+          {% elif cotizacion.estado_trabajo == 2 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+          {% else %}<label class="label label-success m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+          {% endif %}
+        <br>
+    </p>
+    <div class="line"></div>
+    <table class="table table-striped bg-white b-a">
+      <thead>
+        
+        <tr>
+          <th style="width: 60px">ITEM</th>
+          <th>DESCRIPCIÓN</th>
+          <th style="width: 90px">UNIDADES</th>
+          <th style="width: 150px">VALOR UNITARIO</th>
+          <th style="width: 120px">VALOR TOTAL</th>
+        </tr>
+
+      </thead>
+      <tbody>
+      {% if object.trabajo_set.all %}
+        {% for trabajo in object.trabajo_set.all %} 
+        <tr>
+			<td style="text-align: center;">{{ forloop.counter }}</td>
+			<td>{{ trabajo.descripcion }}</td>
+			<td style="text-align: center;">{{ trabajo.unidad }}</td>
+			<td style="text-align: right;">${{ trabajo.valor|intcomma }}</td>
+			<td style="text-align: right;">${{ trabajo.total|intcomma }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+		<p>No tiene trabajos asociados.</p>
+	  {% endif %}
+        <tr>
+          <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
+          <td style="text-align: right;">${{ object.neto|intcomma }}</td>
+        </tr>
+
+        <tr>
+          <td colspan="4" class="text-right no-border"><strong>IVA</strong></td>
+          <td style="text-align: right;">${{ object.iva|intcomma }}</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="text-right no-border"><strong>Total</strong></td>
+          <td style="text-align: right;"><strong>${{ object.total|intcomma }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="col-xs-6">
+
+
+
+        <p>{{ object.observacion|linebreaks }}
+        </p>
+      </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+{% endblock content %}

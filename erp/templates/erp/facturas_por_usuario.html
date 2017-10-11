@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+{% load humanize %}
+
+{% block content %}
+    <h1>Facturas</h1>
+
+    {% if factura_list %}
+    <ul>
+
+      {% for factura in factura_list %} 
+      <li>
+        <a href="{% url 'erp:factura_new' factura.pk %}">#{{factura.numero}} - ${{factura.neto|floatformat:"0"|intcomma}} </a> 
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>No tiene facturas creadas.</p>
+    {% endif %}       
+{% endblock %}

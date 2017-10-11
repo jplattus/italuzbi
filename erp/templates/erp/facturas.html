@@ -1,0 +1,118 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Listado de Facturas{% endblock %}
+
+{% block styles %}
+
+<link rel="stylesheet" href="{% static 'libs/jquery/datatables/media/js/datatables.css' %}" type="text/css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.bootstrap.min.css"></link>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"></link>
+
+
+
+{% endblock styles %}
+
+
+
+{% block content %}
+
+<div class="wrapper-md">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Listado de Facturas
+    </div>
+    <div >
+      <table id="cotizaciones" class="table table-condensed table-hover b-t b-b" >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Estado</th>
+            <th>Neto</th>
+            <th>IVA</th>
+            <th>Total</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for factura in factura_list %} 
+            <tr>
+              <td><a href="{% url 'erp:cotizaciones_factura' factura.pk %}" class="text-info" style="text-decoration: underline;">{{factura.numero}}</a></td>
+              <td>{{factura.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{factura.cotizaciones.first.local.cliente}}</td>
+              <td> 
+                {% if factura.estado == 1 %} <label class="label bg-danger m-l-xs"><a href="#" style="cursor:pointer;">{{factura.get_estado_display}}</a></label> 
+                {% else %}<label class="label label-primary m-l-xs">{{factura.get_estado_display}}</label> 
+                {% endif %}
+              </td>
+              <td>${{factura.neto|floatformat:"0"|intcomma }}</td>
+              <td>${{factura.iva|floatformat:"0"|intcomma }}</td>
+              <td>${{factura.total|floatformat:"0"|intcomma }}</td>
+              <td class="text-center">
+                <a href="{% url 'erp:factura_new' factura.pk %}"><i class="fa fa-pencil icon text-inverse"></i></a>
+                <a href="#"><i class="fa fa-search icon text-primary"></i></a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% block scrypts %}
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript" src="{% static 'libs/jquery/datatables/media/js/datatables.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#cotizaciones').DataTable( {
+
+    
+        "language": {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+    } );
+} );
+</script>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% endblock %}

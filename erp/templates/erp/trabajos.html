@@ -1,0 +1,77 @@
+
+{% extends "base_generic.html" %}
+{% load humanize %}
+
+{% block title %}Listado de Trabajos{% endblock %}
+
+{% block content %}
+
+<div class="wrapper-md">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Listado de Trabajos {% if cotizacion %} de <b>Cotización #{{cotizacion.id}}</b> {% endif %}
+    </div>
+    <div class="table-responsive">
+      <table id="datatable" ui-jq="dataTable" class="table table-condensed table-hover b-t b-b responsive" >
+        <thead>
+          <tr>
+            <th>OT</th>
+            <th>Cotización</th>
+            <th>Fecha</th>
+            <th>Local</th>
+            <th>Trabajo</th>
+            <th>Actividad</th>
+            <th>Cuadrilla</th>
+            <th>V/U</th>
+            <th>Unidades</th>
+            <th>Total</th>
+            <th>Neto</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for trabajo in trabajo_list %} 
+            <tr>
+              <td>{{trabajo.ot.numero}}</td>
+              <td>{{trabajo.cotizacion}}</td>
+              <td>{{trabajo.cotizacion.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+              <td>{{trabajo.cotizacion.local}} - {{trabajo.cotizacion.local.cliente}}</td>
+              <td>{{trabajo.descripcion}}</td>
+              <td>{{trabajo.actividad}}</td>
+              <td>{{trabajo.cuadrilla}}</td>
+              <td>${{trabajo.valor|intcomma }}</td>
+              <td>{{trabajo.unidad}}</td>
+              <td>${{trabajo.total|intcomma }}</td>
+              <td>${{trabajo.cotizacion.neto|intcomma }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% block scrypts %}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#datatable').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'excel', 'pdf'
+        ]
+    } );
+} );
+</script>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% endblock %}

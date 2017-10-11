@@ -1,0 +1,159 @@
+
+{% extends "base_generic.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Crear Cotización {% endblock %}
+{% block content %}
+
+
+<!-- https://bash-shell.net/phoenix-django-devs-inline-formset-nested-changesets-part-1/ -->
+
+<style>
+
+#empty-row {
+    display: none
+}
+/*.form-inline {
+
+    margin: 20px 0px;
+    padding: 20px 10px;
+}
+.new-parent-row {
+    background-color: rgb(75, 186, 228);
+}*/
+    
+</style>
+
+
+<div class="wrapper-md">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold">Nueva Cotización</div>
+			<div class="panel-body">
+					<form method='POST' action="">
+					{% csrf_token %}
+					<div>
+						<h5 style="font-weight: bold;">Datos de Cotización</h5>
+						{% crispy cotizacion_form cotizacion_form.helper %}<hr/>
+						<h5 style="font-weight: bold;">Detalle de los Trabajos <a class="btn btn-rounded btn-sm btn-icon btn-default add-new-form"><i class="fa fa-plus text-success"></i></a></h5>
+					</div>
+
+						{{ trabajo_forms.management_form|crispy }}
+
+						{% for x in trabajo_forms %}
+
+						<!-- <hr/>{{ x.as_p }} -->
+						<!-- {% crispy x x.helper %} -->
+						<div class="form-inline">
+							{{ x|crispy }}
+							<hr>
+						</div>
+						
+
+						{% endfor %}
+
+						<div class="form-inline" id="empty-row">
+							{{ trabajo_forms.empty_form|crispy  }}
+							<hr>	
+						</div>
+
+						
+
+						
+						 <button class="btn btn-block btn-primary" >Guardar</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+
+	{% block scrypts %}
+
+
+
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> Eliminado porque impedia el desempeño de dateepicker  -->
+	
+	
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker12').datepicker({
+				format: "dd/mm/yyyy",
+				weekStart: 1,
+				todayBtn: "linked",
+				language: "es",
+				calendarWeeks: true,
+				autoclose: true,
+				todayHighlight: true
+			});
+		});
+
+
+
+		function updateEmptyFormIDs(element, totalForms){
+		    var thisInput = element
+		    // get current form input name
+		    var currentName = element.attr('name')
+		    // replace "prefix" with actual number
+		    var newName = currentName.replace(/__prefix__/g, totalForms)
+		    // console.log(newName)
+		    
+		    // update input with new name
+		    thisInput.attr('name', newName)
+		    thisInput.attr('id', "id_" + newName)
+		    // create a new form row id
+		    var newFormRow = element.closest(".form-inline");
+		    var newRowId =  "row_id_" + newName
+		    newFormRow.attr("id", newRowId)
+		    // add new class for basic graphic animation
+		    newFormRow.addClass("new-parent-row")
+		    // update form group id
+		    var parentDiv = element.parent();
+		    parentDiv.attr("id", "parent_id_" + newName)
+		    // update label id
+		    var inputLabel = parentDiv.find("label")
+		    inputLabel.attr("for", "id_" + newName)
+		    
+		    // return created row
+		    return newFormRow
+}
+		$('.add-new-form').click(function(e) {
+		    e.preventDefault()
+		    // form id like #id_form-TOTAL_FORMS
+		    var formId = "id_trabajo-TOTAL_FORMS"
+		    // copy empty form
+		    var emptyRow = $("#empty-row").clone();
+		    // remove id from new form
+		    emptyRow.attr("id", null)
+		    // Insert row after last row
+		    
+		    // get starting form count for formset
+		    var totalForms = parseInt($('#' + formId).val());
+		    
+		    // create new form row from empty form row
+		    var newFormRow;
+		    emptyRow.find("input, select, textarea").each(function(){
+		        newFormRow = updateEmptyFormIDs($(this), totalForms)
+		    })
+		    // insert new form at the end of the last form row
+		    $(".form-inline:last").after(newFormRow)
+		    // update total form count (to include new row)
+		    $('#'+ formId).val(totalForms + 1);
+		    // scroll page to new row
+		    $('html, body').animate({
+		        scrollTop: newFormRow.offset().top - 100
+		    }, 500, function(){
+		        // animate background color
+		        // requires: jQuery Color: https://code.jquery.com/color/jquery.color-2.1.2.min.js
+		        newFormRow.animate({
+		            backgroundColor: "#fff"
+		        }, 1500)
+		    });
+		});
+
+
+		
+	</script>
+
+	{% endblock scrypts %}
