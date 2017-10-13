@@ -1,11 +1,8 @@
+# -*- coding: utf-8 -*-
 from django import forms
-from django.forms.formsets import BaseFormSet
+from crispy_forms.bootstrap import Field
 from crispy_forms.helper import FormHelper
-
-from crispy_forms.layout import Submit, Layout, Div, Fieldset, HTML, ButtonHolder, MultiField
-from django.core.urlresolvers import reverse
-from crispy_forms.bootstrap import Field, InlineCheckboxes, TabHolder, Tab, InlineField
-
+from crispy_forms.layout import Layout, Div
 
 from .models import Cotizacion, Trabajo, Documentacion, Factura, OT
 
@@ -28,95 +25,95 @@ class BootstrapModelForm(forms.ModelForm):
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class FacturaModelForm(forms.ModelForm):
-	class Meta:
-		model = Factura
-		fields = ('numero','fecha','observacion','cotizaciones')
+    class Meta:
+        model = Factura
+        fields = ('numero','fecha','observacion','cotizaciones')
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class OtForm(forms.ModelForm):
-	class Meta:
-		model = OT
-		fields = ('numero','fecha','encargado')
+    class Meta:
+        model = OT
+        fields = ('numero','fecha','encargado')
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\			
 
 class DocumentacionForm(forms.ModelForm):
-	class Meta:
-		model = Documentacion
-		fields = ('documento','fecha', 'numero')
-		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
+    class Meta:
+        model = Documentacion
+        fields = ('documento','fecha', 'numero')
+        widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
-	def __init__(self, *args, **kwargs):
-		super(DocumentacionForm, self).__init__(*args, **kwargs)
-		if self.instance.id:
-			self.fields['documento'].widget.attrs['readonly'] = True
-		self.can_delete = False
-		self.helper = FormHelper()
-		# self.helper.form_tag = False
-		self.helper.form_id = 'id-documentacion-form'
-		self.helper.form_method = 'post'
-		self.helper.form_class = 'form-inline'
-		self.helper.field_template = 'bootstrap3/layout/inline_field.html'
-		self.helper.form_action = 'submit-uniform'
-		
+    def __init__(self, *args, **kwargs):
+        super(DocumentacionForm, self).__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['documento'].widget.attrs['readonly'] = True
+        self.can_delete = False
+        self.helper = FormHelper()
+        # self.helper.form_tag = False
+        self.helper.form_id = 'id-documentacion-form'
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-inline'
+        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+        self.helper.form_action = 'submit-uniform'
+
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class CotizacionForm(forms.ModelForm):
-	class Meta:
-		model = Cotizacion
-		fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
-		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
+    class Meta:
+        model = Cotizacion
+        fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
+        widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
-	def __init__(self, *args, **kwargs):
-		super(CotizacionForm, self).__init__(*args, **kwargs)
-		self.helper = FormHelper()
-		self.helper.form_tag = False
-		self.helper.form_id = 'id-cotizacion-form'
-		self.helper.form_method = 'post'
-		self.helper.form_action = 'submit-uniform'
-		self.helper.layout = Layout(
-					Div('fecha', 'local','detalle_monto', css_class="col-md-6"),
-					Div('estado_trabajo','estado_cotizacion', css_class="col-md-6"),
-					Field('observacion',style="max-height: 100px;")
-				)
-					
+    def __init__(self, *args, **kwargs):
+        super(CotizacionForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_id = 'id-cotizacion-form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'submit-uniform'
+        self.helper.layout = Layout(
+                    Div('fecha', 'local','detalle_monto', css_class="col-md-6"),
+                    Div('estado_trabajo','estado_cotizacion', css_class="col-md-6"),
+                    Field('observacion',style="max-height: 100px;")
+                )
+
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class TrabajoForm(forms.ModelForm):
-	class Meta:
-		model = Trabajo
-		fields = ('descripcion','unidad','valor','actividad','cuadrilla','cotizacion')
+    class Meta:
+        model = Trabajo
+        fields = ('descripcion','unidad','valor','actividad','cuadrilla','cotizacion')
 
-	def __init__(self, *args, **kwargs):
-		super(TrabajoForm, self).__init__(*args, **kwargs)
-		self.helper = FormHelper()
-		self.helper.form_tag = False
-		self.helper.form_id = 'id-trabajo-form'
-		self.helper.form_method = 'post'
-		self.helper.form_class = 'form-inline'
-		self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+    def __init__(self, *args, **kwargs):
+        super(TrabajoForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_id = 'id-trabajo-form'
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-inline'
+        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class TrabajoOTForm(forms.ModelForm):
-	class Meta:
-		model = Trabajo
-		fields = ('ot',)
+    class Meta:
+        model = Trabajo
+        fields = ('ot',)
 
-	def __init__(self, *args, **kwargs):
-		super(TrabajoForm, self).__init__(*args, **kwargs)
-		self.helper = FormHelper()
-		self.helper.form_tag = False
-		self.helper.form_id = 'id-trabajo-form'
-		self.helper.form_method = 'post'
-		self.helper.form_class = 'form-inline'
-		self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+    def __init__(self, *args, **kwargs):
+        super(TrabajoForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_id = 'id-trabajo-form'
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-inline'
+        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
             
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
@@ -128,22 +125,22 @@ DocumentacionFormset = forms.inlineformset_factory(Cotizacion, Documentacion, fo
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-					
+
 class CotizacionModelForm(forms.ModelForm):
-	class Meta:
-		model = Cotizacion
-		fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
-		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
+    class Meta:
+        model = Cotizacion
+        fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
+        widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 class TrabajoModelForm(forms.ModelForm):
-	class Meta:
-		model = Trabajo
-		
-		fields = ('unidad','valor','actividad','cuadrilla','cotizacion','descripcion')
-				
+    class Meta:
+        model = Trabajo
+
+        fields = ('unidad','valor','actividad','cuadrilla','cotizacion','descripcion')
+
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\			
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
