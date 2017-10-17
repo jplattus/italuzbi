@@ -81,10 +81,6 @@ class Local(models.Model):
 
 class Cotizacion(models.Model):
 	
-	ET = (
-		(1,'Esperando'),
-		(2,'Trabajando'),
-		(3,'Terminado'))
 	EC = (
 		(1, 'En Espera'),
 		(2,'Debe'),
@@ -94,7 +90,6 @@ class Cotizacion(models.Model):
 
 	fecha = models.DateField()
 	estado_cotizacion = models.IntegerField(choices=EC, default=1)
-	estado_trabajo = models.IntegerField(choices=ET, default=1)
 	local = models.ForeignKey(Local, on_delete=models.CASCADE)
 	observacion = models.TextField(null=True)
 	created_at = models.DateTimeField(auto_now_add=True, blank=True)
@@ -129,6 +124,14 @@ class Cotizacion(models.Model):
 			if doc.numero is None or doc.fecha is None:
 				respuesta = False
 				break
+		return respuesta
+
+	@property
+	def trabajos_pendientes(self):
+		respuesta = 0
+		for trabajo in Trabajo.objects.filter(cotizacion=self):
+			if trabajo.ot is None:
+				respuesta += 1
 		return respuesta
 
 	@property
@@ -233,7 +236,7 @@ class Trabajo(models.Model):
 	cuadrilla = models.ForeignKey(Cuadrilla, on_delete=models.CASCADE)
 	cotizacion = models.ForeignKey(Cotizacion, on_delete=models.CASCADE)
 	ot = models.ForeignKey(OT, null=True, on_delete=models.CASCADE)
-	observacion = models.TextField(null=True)
+	observacion = models.TextField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True, blank=True)
 	updated_at = models.DateTimeField(auto_now_add=True, blank=True)
 	# created_by

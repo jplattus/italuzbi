@@ -30,9 +30,9 @@
             <th>#</th>
             <th>Fecha</th>
             <th>Local</th>
-            <th>Cliente</th>
+            <th>Trabajo</th>
             <th>Estado</th>
-            <th>Trabajos</th>
+            <th>Pendientes</th>
             <th>Neto</th>
             <th>IVA</th>
             <th>Total</th>
@@ -44,19 +44,18 @@
             <tr>
               <td><a href="{% url 'erp:cotizacion_trabajos' cotizacion.pk %}" class="text-info" style="text-decoration: underline;">{{cotizacion.pk}}</a></td>
               <td>{{cotizacion.fecha|date:"SHORT_DATE_FORMAT" }}</td>
-              <td>{{cotizacion.local}}</td>
-              <td>{{cotizacion.local.cliente}}</td>
+              <td>{{cotizacion.local}} - {{cotizacion.local.cliente}}</td>
+              <td>{{cotizacion.trabajo_set.first.actividad }}</td>
               <td> 
                 {% if cotizacion.estado_cotizacion == 1 %} <label class="label label-info m-l-xs"><a href="#" style="cursor:pointer;">{{cotizacion.get_estado_cotizacion_display}}</a></label> 
-                {% elif cotizacion.estado_cotizacion == 2 %}<label class="label label-warning m-l-xs"><a href="{% url 'erp:cotizacion_new_documents' cotizacion.pk %}">{{cotizacion.get_estado_cotizacion_display}}</a></label> 
+                {% elif cotizacion.estado_cotizacion == 2 %}<label class="label label-warning m-l-xs"><a href="{% url 'erp:cotizacion_new_documents' cotizacion.pk %}">{{cotizacion.get_estado_cotizacion_display}} <i class="fa fa-hand-o-left"></i></a></label> 
                 {% elif cotizacion.estado_cotizacion == 3 %}<label class="label label-danger m-l-xs"><a href="#" style="cursor:pointer;">{{cotizacion.get_estado_cotizacion_display}}</a></label>
                 {% else %}<label class="label label-primary m-l-xs">{{cotizacion.get_estado_cotizacion_display}}</label> 
                 {% endif %}
               </td>
               <td>
-                {% if cotizacion.estado_trabajo == 1 %} <label class="label label-warning m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
-                {% elif cotizacion.estado_trabajo == 2 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
-                {% else %}<label class="label label-success m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
+                {% if cotizacion.trabajos_pendientes > 0 %} <label class="badge bg-danger">{{cotizacion.trabajos_pendientes}}</label> 
+                {% else %}<label class="badge bg-success">{{cotizacion.trabajos_pendientes}}</label> 
                 {% endif %}
               </td>
 
@@ -91,7 +90,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('#cotizaciones').DataTable( {
-    
+        "order": [[ 0, "desc" ]],
         "language": {
                 "sProcessing":     "Procesando...",
                 "sLengthMenu":     "Mostrar _MENU_ registros",

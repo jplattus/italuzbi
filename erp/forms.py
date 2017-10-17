@@ -38,7 +38,7 @@ class FacturaModelForm(forms.ModelForm):
 class OtForm(forms.ModelForm):
 	class Meta:
 		model = OT
-		fields = ('numero','fecha','encargado')
+		fields = ('numero','fecha','encargado', 'observacion')
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\			
@@ -68,7 +68,7 @@ class DocumentacionForm(forms.ModelForm):
 class CotizacionForm(forms.ModelForm):
 	class Meta:
 		model = Cotizacion
-		fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
+		fields = ('fecha', 'local','estado_cotizacion','detalle_monto', 'observacion',)
 		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
 	def __init__(self, *args, **kwargs):
@@ -80,7 +80,7 @@ class CotizacionForm(forms.ModelForm):
 		self.helper.form_action = 'submit-uniform'
 		self.helper.layout = Layout(
 					Div('fecha', 'local','detalle_monto', css_class="col-md-6"),
-					Div('estado_trabajo','estado_cotizacion', css_class="col-md-6"),
+					Div(Field('estado_cotizacion', readonly=True, disabled=True), css_class="col-md-6"),
 					Field('observacion',style="max-height: 100px;")
 				)
 					
@@ -107,7 +107,7 @@ class TrabajoForm(forms.ModelForm):
 class TrabajoOTForm(forms.ModelForm):
 	class Meta:
 		model = Trabajo
-		fields = ('ot',)
+		fields = ('ot', 'cotizacion', 'descripcion')
 
 	def __init__(self, *args, **kwargs):
 		super(TrabajoForm, self).__init__(*args, **kwargs)
@@ -122,7 +122,7 @@ class TrabajoOTForm(forms.ModelForm):
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 
 TrabajoFormSet = forms.inlineformset_factory(Cotizacion, Trabajo, form=TrabajoForm, extra=1)
-TrabajoOTFormSet = forms.inlineformset_factory(OT, Trabajo, form=TrabajoOTForm, extra=0)				
+TrabajoOTFormSet = forms.modelformset_factory(Trabajo, fields=['ot'], extra=0)				
 
 DocumentacionFormset = forms.inlineformset_factory(Cotizacion, Documentacion, form=DocumentacionForm, extra=0)
 
@@ -132,7 +132,7 @@ DocumentacionFormset = forms.inlineformset_factory(Cotizacion, Documentacion, fo
 class CotizacionModelForm(forms.ModelForm):
 	class Meta:
 		model = Cotizacion
-		fields = ('fecha', 'local','estado_cotizacion','estado_trabajo','detalle_monto', 'observacion',)
+		fields = ('fecha', 'local','estado_cotizacion','detalle_monto', 'observacion',)
 		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\

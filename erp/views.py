@@ -91,6 +91,7 @@ class ListarCotizacionView(LoginRequiredMixin,generic.ListView):
     model = Cotizacion
     template_name = 'erp/cotizaciones.html'
     paginate_by = 30
+    ordering = ["-pk"]
 
 # ********************************************************************************************************************************************
 
@@ -122,20 +123,34 @@ def factura_new(request, factura_id=None, *args, **kwargs):
 # CREAR ORDEN DE TRABAJO
 # ********************************************************************************************************************************************
 
-def ot_new(request, ot_id=None, *args, **kwargs):
+def ot_new(request, pk=None, *args, **kwargs):
 
-    if ot_id:
-        instancia = OT.objects.get(pk=ot_id)
-        trabajo_list = Trabajo.objects.filter(ot=ot_id)
+    template = 'erp/ot_form.html'
+    if pk:
+        instancia = OT.objects.get(pk=pk)
+        trabajo_list = Trabajo.objects.filter(ot=pk)
     else:
         instancia = OT()
         trabajo_list = Trabajo.objects.exclude(ot__isnull=False)
-    form = OtForm(request.POST or None, prefix='ot',instance=instancia)
-    formset = TrabajoOTFormSet(request.POST, request.FILES, prefix='ot', instance=instancia)
+    form = OtForm(request.POST or None, prefix='ot', instance=instancia)
+
     if form.is_valid():
         form.save()
+        seleccion = request.POST.getlist('checks')
+        for x in seleccion:
+            trabajo_selected = Trabajo.objects.get(pk=x)
+            trabajo_selected.ot = instancia
+            trabajo_selected.save()
+            if trabajo_selected.cotizacion.trabajos_pendientes > 0:
+                print "Hay trabajos pendientes"
+            else:
+                print "No hay trabajos pendientes"
+                trabajo_selected.cotizacion.estado_cotizacion = 2
+                trabajo_selected.cotizacion.save()
+
         return redirect('erp:trabajos')
-    return render(request, 'erp/ot_form.html', {'form': form , 'formset': formset , 'trabajo_list': trabajo_list})
+    context = {'form': form , 'trabajo_list': trabajo_list}
+    return render(request, template, context)
 
     
 

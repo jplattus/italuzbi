@@ -28,9 +28,7 @@
 					</div>
 					<br>
 					{{ formset.management_form|crispy }}
-					{% for form in formset %}
-						{{ form.as_p }}
-					{% endfor %}
+					
 
 					<h5 style="font-weight: bold;">Trabajos Realizados</h5>
 				      <div class="table">
@@ -50,7 +48,7 @@
 				        <tbody>
 				          {% for trabajo in trabajo_list %} 
 				            <tr>
-				              <td style="border-bottom: thin solid #f0f0f0 ;"><input type="checkbox" value=""></td>	
+				              <td style="border-bottom: thin solid #f0f0f0 ;"><input type="checkbox" name="checks" value={{trabajo.pk}}></td>	
 				              <td class="text-center" style="border-bottom: thin solid #f0f0f0 ;">{{trabajo.cotizacion}}</td>
 				              <td style="border-bottom: thin solid #f0f0f0 ;">{{trabajo.cotizacion.fecha|date:"SHORT_DATE_FORMAT" }}</td>
 				              <td style="border-bottom: thin solid #f0f0f0 ;">{{trabajo.cotizacion.local}}</td>

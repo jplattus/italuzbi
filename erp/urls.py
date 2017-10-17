@@ -15,6 +15,7 @@ urlpatterns = [
     
     url(r'^trabajos/$', views.ListarTrabajosView.as_view(), name='trabajos'),
     url(r'^trabajos/ot/new/$', views.ot_new, name='ot_new'),
+    url(r'^trabajos/ot/edit/(?P<pk>[0-9]+)/$', views.ot_new, name='ot_new'),
 
 
     url(r'^cotizaciones/$', views.ListarCotizacionView.as_view(), name='cotizaciones'),

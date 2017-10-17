@@ -20,7 +20,6 @@ class CotizacionAdmin(admin.ModelAdmin):
 		'id',
 		str('fecha'),
 		'estado_cotizacion',
-		'estado_trabajo',
 		'local',
 		'neto'
 		)
