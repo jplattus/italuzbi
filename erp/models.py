@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.db.models import Q
 
 from django.db import models
 from django.contrib import admin
@@ -103,7 +104,8 @@ class Cotizacion(models.Model):
 	@property
 	def neto(self):
 		contador = 0
-		for trabajo in Trabajo.objects.filter(cotizacion=self):
+		trabajos = self.trabajo_set.all()
+		for trabajo in trabajos: # Trabajo.objects.filter(cotizacion=self):
 			contador += trabajo.total
 		return contador
 
@@ -119,12 +121,7 @@ class Cotizacion(models.Model):
 
 	@property
 	def debe(self):
-		respuesta = True
-		for doc in Documentacion.objects.filter(cotizacion=self):
-			if doc.numero is None or doc.fecha is None:
-				respuesta = False
-				break
-		return respuesta
+		return not self.documentacion_set.filter(Q(numero__isnull=True) | Q(fecha__isnull=True)).count()
 
 	@property
 	def trabajos_pendientes(self):
