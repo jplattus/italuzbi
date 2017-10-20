@@ -56,12 +56,6 @@
           </ul>
           {% endif %}
         <br>
-        Estado Trabajo:  
-          {% if cotizacion.estado_trabajo == 1 %} <label class="label label-warning m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
-          {% elif cotizacion.estado_trabajo == 2 %}<label class="label label-danger m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
-          {% else %}<label class="label label-success m-l-xs">{{cotizacion.get_estado_trabajo_display}}</label> 
-          {% endif %}
-        <br>
     </p>
     <div class="line"></div>
     <table class="table table-striped bg-white b-a">
@@ -92,16 +86,16 @@
 	  {% endif %}
         <tr>
           <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
-          <td style="text-align: right;">${{ object.neto|intcomma }}</td>
+          <td style="text-align: right;">${{ object.neto|floatformat:"0"|intcomma }}</td>
         </tr>
 
         <tr>
           <td colspan="4" class="text-right no-border"><strong>IVA</strong></td>
-          <td style="text-align: right;">${{ object.iva|intcomma }}</td>
+          <td style="text-align: right;">${{ object.iva|floatformat:"0"|intcomma }}</td>
         </tr>
         <tr>
           <td colspan="4" class="text-right no-border"><strong>Total</strong></td>
-          <td style="text-align: right;"><strong>${{ object.total|intcomma }}</strong></td>
+          <td style="text-align: right;"><strong>${{ object.total|floatformat:"0"|intcomma }}</strong></td>
         </tr>
       </tbody>
     </table>

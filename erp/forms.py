@@ -68,19 +68,20 @@ class DocumentacionForm(forms.ModelForm):
 class CotizacionForm(forms.ModelForm):
 	class Meta:
 		model = Cotizacion
-		fields = ('fecha', 'local','estado_cotizacion','detalle_monto', 'observacion',)
+		fields = ('fecha', 'local','detalle_monto', 'observacion',)
 		widgets = {'fecha': forms.DateInput(attrs={'id': 'datetimepicker12'})}
 
 	def __init__(self, *args, **kwargs):
 		super(CotizacionForm, self).__init__(*args, **kwargs)
 		self.helper = FormHelper()
 		self.helper.form_tag = False
+		self.helper.form_read_only = True
 		self.helper.form_id = 'id-cotizacion-form'
 		self.helper.form_method = 'post'
 		self.helper.form_action = 'submit-uniform'
 		self.helper.layout = Layout(
-					Div('fecha', 'local','detalle_monto', css_class="col-md-6"),
-					Div(Field('estado_cotizacion', readonly=True, disabled=True), css_class="col-md-6"),
+					'fecha', 'local','detalle_monto',
+					# Div(Field('estado_cotizacion', readonly=True, disabled=True), css_class="col-md-6"),
 					Field('observacion',style="max-height: 100px;")
 				)
 					
