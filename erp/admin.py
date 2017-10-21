@@ -1,21 +1,21 @@
-# -*- coding: utf-8 -*-
 from django.contrib import admin
+import locale
 
-from .models import *
+# Register your models here.
+from .models import Cliente, Factura, Pago, Local, Cotizacion, Encargado, OT, OC, Actividad, Cuadrilla, Estructura_costo, Cuenta_contable, Trabajo, Trabajador, Ejecuta, Proveedor, Material, Compra, Detalle_compra, Utilizado, Documento, Documentacion
+
 
 
 class FacturaAdmin(admin.ModelAdmin):
-    list_display = ('numero', str('fecha'), str('estado'), 'created_by',)
-    ordering = ('fecha',)
+	list_display = ('numero', str('fecha'), str('estado'), 'created_by',)
+	ordering = ('fecha',)
 
 
 class LocalAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'nombre_2', 'direccion', 'cliente')
-    ordering = ('cliente',)
-
+	list_display = ('nombre', 'nombre_2', 'direccion', 'cliente')
+	ordering = ('cliente',)
 
 class CotizacionAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
 	list_display = (
 		'id',
 		str('fecha'),
@@ -24,27 +24,14 @@ class CotizacionAdmin(admin.ModelAdmin):
 		'neto'
 		)
 	ordering = ('id',)
-=======
-    list_display = (
-        'id',
-        str('fecha'),
-        'estado_cotizacion',
-        'estado_trabajo',
-        'local',
-        'neto'
-        )
-    ordering = ('id',)
-
->>>>>>> 0e438ef8a1e3c01e66c3cac61a85f1d8072f67c4
 
 class DocumentoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'cliente')
-    ordering = ('nombre',)
-
+	list_display = ('nombre', 'cliente')
+	ordering = ('nombre',)
 
 class DocumentacionAdmin(admin.ModelAdmin):
-    list_display = ('cotizacion', 'documento', 'numero', 'fecha')
-    ordering = ('cotizacion',)
+	list_display = ('cotizacion', 'documento', 'numero', 'fecha')
+	ordering = ('cotizacion',)
 
 
 admin.site.register(Documentacion, DocumentacionAdmin)

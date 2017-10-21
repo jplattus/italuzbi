@@ -1,19 +1,33 @@
-# -*- coding: utf-8 -*-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.template import loader
+from django.core.urlresolvers import reverse
+from django.views import generic
+from django.utils import timezone
+from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.template import loader
-from django.views import generic
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.forms import inlineformset_factory, formset_factory, modelformset_factory
 
-from .forms import CotizacionForm, TrabajoFormSet, DocumentacionFormset, FacturaModelForm, OtForm, TrabajoOTFormSet
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+
+
+
+from .forms import CotizacionForm, TrabajoForm, TrabajoFormSet, DocumentacionForm, DocumentacionFormset, FacturaModelForm, OtForm, TrabajoOTFormSet
+
+
 from .models import Cliente, Factura, Trabajo, Cotizacion, Documentacion, Documento, OT
 
 
 @login_required
 def index(request):
+    
     template = loader.get_template('erp/index.html')
+
+
     return HttpResponse(template.render(request))
 
 
@@ -187,6 +201,7 @@ def cotizacion_new(request, cotizacion_id=None, *args, **kwargs):
 class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Cotizacion
     template_name = 'erp/detail.html'
+
 
 
 class ResultsView(generic.DetailView):
