@@ -1,0 +1,12 @@
+ *.py[cod]
+ 
+ *.sqlite*
+-
++italuzvenv
+ # C extensions
+ *.so
+.idea/italuzbi.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
