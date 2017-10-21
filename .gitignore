@@ -1,0 +1,7 @@
+ *.py[cod]
+ 
+ *.sqlite*
+-
++italuzvenv
+ # C extensions
+ *.so
